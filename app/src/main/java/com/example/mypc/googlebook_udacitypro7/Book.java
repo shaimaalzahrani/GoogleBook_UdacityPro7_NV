@@ -1,70 +1,63 @@
 package com.example.mypc.googlebook_udacitypro7;
 
-import com.google.api.client.util.Key;
-
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.ArrayList;
 
 /**
  * Created by shaimaalzahrani on 14/04/2017.
  */
 
-public class Book implements Serializable {
-    @Key
-    public String id;
+public class Book implements Parcelable {
 
-    @Key
-    public String name;
+    String title;
+    ArrayList<String> authors;
 
-    @Key
-    public String reference;
+    public Book() {}
 
-    @Key
-    public String icon;
+    public Book(Parcel in) {
+        title = in.readString();
+        authors = in.readArrayList(null);
+    }
 
-    @Key
-    public String vicinity;
+    public String getTitle() {
+        return this.title;
+    }
 
-    @Key
-    public double rating;
+    public ArrayList<String> getAuthors() {
+        return this.authors;
+    }
 
-    @Key
-    public Geometry geometry;
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    @Key
-    public Reviews[] reviews;
-
-    @Key
-    public String formatted_address;
-
-    @Key
-    public String formatted_phone_number;
+    public void setAuthors(ArrayList<String> authors) {
+        this.authors = authors;
+    }
 
     @Override
-    public String toString() {
-        return name + " - " + id + " - " + reference;
+    public int describeContents() {
+        return 0;
     }
 
-    public static class Geometry implements Serializable
-    {
-        @Key
-        public Location location;
-    }
-    public static class Reviews implements Serializable
-    {
-        @Key
-        public String author_name;
-
-        @Key
-        public String text;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeList(authors);
     }
 
-    public static class Location implements Serializable
-    {
-        @Key
-        public double lat;
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
 
-        @Key
-        public double lng;
-    }
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
 }

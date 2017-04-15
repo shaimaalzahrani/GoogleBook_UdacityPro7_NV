@@ -1,23 +1,88 @@
 package com.example.mypc.googlebook_udacitypro7;
 
-/**
- * Created by shaimaalzahrani on 14/04/2017.
- */
-import com.google.api.client.util.Key;
-
-import java.io.Serializable;
-import java.util.List;
-
-/** Implement this class from "Serializable"
- * So that you can pass this class Object to another using Intents
- * Otherwise you can't pass to another actitivy
- * */
-public class BookList implements Serializable {
-
-    @Key
-    public List<Book> results;
-    @Key
-    public String status;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import java.util.ArrayList;
 
 
+public class BookList extends ArrayAdapter<Book> {
+
+    private Context context;
+    ArrayList<Book> bookList;
+    private static final String LOG_TAG = BookList.class.getSimpleName();
+
+    static class ViewHolder {
+        public TextView title;
+        public TextView authors;
+    }
+
+    public BookList(Context context, ArrayList<Book> bookList) {
+        super(context, -1, bookList);
+        this.context = context;
+        this.bookList = bookList;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 1;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+
+        if (view == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.list_item, null);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.title = (TextView) view.findViewById(R.id.book_title);
+            viewHolder.authors = (TextView) view.findViewById(R.id.book_author);
+            view.setTag(viewHolder);
+        }
+
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        viewHolder.title.setText(bookList.get(position).getTitle());
+
+        String authorsString = "";
+        int authorNr = 0;
+
+        for (String author:bookList.get(position).getAuthors()) {
+
+            if (authorNr == 0) {
+                authorsString = context.getString(R.string.book_item_authors_label);
+            }
+
+            if (authorNr > 0) {
+                authorsString = authorsString + ", ";
+            }
+            authorsString = authorsString + author;
+            authorNr++;
+            Log.d(LOG_TAG, "Authors: " + authorsString);
+        }
+
+        viewHolder.authors.setText(authorsString);
+
+        return view;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public int getCount() {
+        return bookList.size();
+    }
 }

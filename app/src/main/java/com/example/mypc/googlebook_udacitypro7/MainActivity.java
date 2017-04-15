@@ -152,6 +152,8 @@ public class MainActivity extends AppCompatActivity{
         isSearchOpened = true;
     }
 
+
+
     public class BooksHttpRequestAsyncTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
